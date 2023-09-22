@@ -1,0 +1,58 @@
+{{ define "main" }}
+
+<div class="max-wrapper">
+    <div id="list-page">
+    {{ if ( eq $.Paginator.PageNumber 1) }}  
+    <div style="text-align: center;">
+        <h1>Hey there!</h1>
+        <h3>I'm Krishna</h3>
+        <h3>Software Engineer</h3>
+        <img src="./images/krishna-profile.jpg"  width="auto" height="300" style="border-radius: 300px;  display: block; margin-left: auto;  margin-right: auto;"></img>
+    </div>
+    {{ end }}
+        <h1>TimeLine</h1>
+        {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+        {{ $paginator := .Paginate $pages }}
+        {{ range $paginator.Pages }}
+            <section class="list-item">
+                <h1 class="title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
+
+                <div class="tips">
+                    <div class="date">
+                        <time datetime="{{ .PublishDate }}">{{ .PublishDate.Format "01/02/2006" }}</time>
+                    </div>
+
+                    {{ with .Params.Categories }}
+                        <div class="categories">
+                            <span>Categories:</span>
+                            {{ range first 2 . }}
+                                <a href="{{ "categories/" | relURL }}{{ . | urlize }}">{{ . }}</a>
+                            {{ end }}
+                        </div>
+                    {{ end }}
+
+                    {{ with .Params.Tags }}
+                        <div class="tags">
+                            <span>Tags:</span>
+                            {{ range first 5 . }}
+                                <a href="{{ "tags/" | relURL }}{{ . | urlize }}">{{ . }}</a>
+                            {{ end }}
+                        </div>
+                    {{ end }}
+                </div>
+
+                <div class="summary">
+                    {{ with .Description }}
+                        {{ . }}
+                    {{ else }}
+                        {{ .Summary }}
+                    {{ end }}
+                </div>
+                <a href="{{ .RelPermalink }}">more...</a>
+            </section>
+        {{ end }}
+
+    </div>
+    {{ partial "pagination.html" . }}
+</div>
+{{ end }}
